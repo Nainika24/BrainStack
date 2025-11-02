@@ -66,7 +66,8 @@ export default function NumberMemory() {
         return newBest;
       });
       setPhase("result");
-      setTimeout(() => setLevel((l) => l + 1), 1000);
+      // Previously we auto-advanced after 1s; remove automatic progression so
+      // the user advances only when they click the Next Level button.
     } else {
       setMessage(`❌ Wrong! It was ${correctNumber}`);
       setPhase("result");
