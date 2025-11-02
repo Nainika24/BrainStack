@@ -26,7 +26,8 @@ export default function Login() {
       setMessage("Login successful! Redirecting...");
       setTimeout(() => navigate("/home"), 1000);
     } catch (err) {
-      setMessage(err.response?.data?.error || "Invalid credentials.");
+      // Backend sends errors under `message` (see server/routes/authRoutes.js).
+      setMessage(err.response?.data?.message || err.response?.data?.error || "Invalid credentials.");
     }
   };
 

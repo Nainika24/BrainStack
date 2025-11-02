@@ -22,7 +22,8 @@ export default function Register() {
       setMessage("Registration successful! Redirecting to login...");
       setTimeout(() => navigate("/"), 1500);
     } catch (err) {
-      setMessage(err.response?.data?.error || "Registration failed.");
+      // Backend returns helpful messages under `message` (e.g. "User already exists").
+      setMessage(err.response?.data?.message || err.response?.data?.error || "Registration failed.");
     }
   };
 
