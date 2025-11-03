@@ -7,16 +7,16 @@ export default function MemoryTest() {
   const [level, setLevel] = useState(1);
   const [status, setStatus] = useState("watch"); // "watch", "play", "win", "lose"
   const [message, setMessage] = useState("");
+  const [showingIndex, setShowingIndex] = useState(-1);
+  const timersRef = useRef([]);
   const [nextEnabled, setNextEnabled] = useState(false);
-  const playTimerRef = useRef(null);
-  const nextEnableTimerRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     generatePattern();
     return () => {
-      if (playTimerRef.current) clearTimeout(playTimerRef.current);
-      if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
+      timersRef.current.forEach((t) => clearTimeout(t));
+      timersRef.current = [];
     };
   }, [level]);
 
@@ -31,23 +31,37 @@ export default function MemoryTest() {
     setUserClicks([]);
     setStatus("watch");
     setMessage("");
+    setShowingIndex(-1);
 
-    if (playTimerRef.current) clearTimeout(playTimerRef.current);
-    playTimerRef.current = setTimeout(() => {
+    // Clear any existing timers
+    timersRef.current.forEach((t) => clearTimeout(t));
+    timersRef.current = [];
+
+    const displayDelay = 700;
+
+    // Sequentially flash pattern tiles
+    newPattern.forEach((idx, i) => {
+      const showTimer = setTimeout(() => setShowingIndex(idx), i * displayDelay);
+      const hideTimer = setTimeout(() => setShowingIndex(-1), i * displayDelay + 400);
+      timersRef.current.push(showTimer, hideTimer);
+    });
+
+    // After pattern is shown, switch to play mode
+    const endTimer = setTimeout(() => {
       setStatus("play");
-    }, 1200 * patternLength);
+      setShowingIndex(-1);
+    }, newPattern.length * displayDelay + 500);
+    timersRef.current.push(endTimer);
   };
 
   const handleTileClick = async (index) => {
     if (status !== "play") return;
     if (userClicks.includes(index)) return;
 
-    // ❌ Wrong click
     if (!pattern.includes(index)) {
       setStatus("lose");
       setMessage(`❌ Wrong tile! You reached level ${level}`);
 
-      // ✅ Save score to backend
       const userId = localStorage.getItem("userId");
       if (userId) {
         try {
@@ -67,7 +81,6 @@ export default function MemoryTest() {
       return;
     }
 
-    // ✅ Correct click
     const newClicks = [...userClicks, index];
     setUserClicks(newClicks);
 
@@ -75,9 +88,16 @@ export default function MemoryTest() {
       setStatus("win");
       setMessage("✅ Great memory! Click Next to continue...");
       setNextEnabled(false);
-      if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
-      nextEnableTimerRef.current = setTimeout(() => setNextEnabled(true), 800);
+      setTimeout(() => setNextEnabled(true), 800);
     }
+  };
+
+  const handleRestart = () => {
+    setUserClicks([]);
+    setMessage("");
+    setStatus("watch");
+    setNextEnabled(false);
+    generatePattern();
   };
 
   return (
@@ -100,7 +120,6 @@ export default function MemoryTest() {
           : message}
       </p>
 
-      {/* Game Grid */}
       <div
         style={{
           display: "grid",
@@ -119,7 +138,7 @@ export default function MemoryTest() {
               height: "80px",
               borderRadius: "10px",
               backgroundColor:
-                pattern.includes(i) && status === "watch"
+                showingIndex === i && status === "watch"
                   ? "gold"
                   : userClicks.includes(i)
                   ? "lightgreen"
@@ -131,36 +150,48 @@ export default function MemoryTest() {
         ))}
       </div>
 
-      {/* Lose Screen */}
       {status === "lose" && (
         <div style={{ marginTop: "20px" }}>
           <p style={{ fontSize: "1.1rem", margin: "8px 0" }}>
             Your score: {Math.max(0, level - 1)}
           </p>
-          <button
-            onClick={() => navigate("/home")}
-            style={{
-              padding: "10px 25px",
-              background: "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-            }}
-          >
-            ← Back to Home
-          </button>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+            <button
+              onClick={handleRestart}
+              style={{
+                padding: "10px 25px",
+                background: "#ef4444",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+              }}
+            >
+              🔁 Try Again
+            </button>
+            <button
+              onClick={() => navigate("/home")}
+              style={{
+                padding: "10px 25px",
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+              }}
+            >
+              ← Back to Home
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Win Screen */}
       {status === "win" && (
         <button
           onClick={() => {
             if (!nextEnabled) return;
-            if (nextEnableTimerRef.current)
-              clearTimeout(nextEnableTimerRef.current);
             setLevel((l) => l + 1);
             setStatus("watch");
             setMessage("");
