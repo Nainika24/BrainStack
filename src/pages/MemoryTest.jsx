@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function MemoryTest() {
-  const [grid, setGrid] = useState([]);
   const [pattern, setPattern] = useState([]);
   const [userClicks, setUserClicks] = useState([]);
   const [level, setLevel] = useState(1);
   const [status, setStatus] = useState("watch"); // "watch", "play", "win", "lose"
   const [message, setMessage] = useState("");
+  const [showingIndex, setShowingIndex] = useState(-1);
+  const timersRef = useRef([]);
   const [nextEnabled, setNextEnabled] = useState(false);
   const playTimerRef = useRef(null);
   const nextEnableTimerRef = useRef(null);
@@ -24,7 +25,6 @@ export default function MemoryTest() {
 
   const generatePattern = () => {
     const patternLength = level + 2;
-    // ensure unique tiles in the pattern so order doesn't matter
     const set = new Set();
     while (set.size < patternLength) {
       set.add(Math.floor(Math.random() * 16));
@@ -34,20 +34,35 @@ export default function MemoryTest() {
     setUserClicks([]);
     setStatus("watch");
     setMessage("");
+    setShowingIndex(-1);
 
-    // After pattern shown, let user play
-    if (playTimerRef.current) clearTimeout(playTimerRef.current);
-    playTimerRef.current = setTimeout(() => {
+    // clear any previous timers
+    timersRef.current.forEach((t) => clearTimeout(t));
+    timersRef.current = [];
+
+    const displayDelay = 800; // ms per item
+
+    // sequentially flash each index in the pattern
+    newPattern.forEach((idx, i) => {
+      const t = setTimeout(() => {
+        setShowingIndex(idx);
+      }, i * displayDelay);
+      timersRef.current.push(t);
+    });
+
+    // after the sequence ends, clear highlight and switch to play
+    const endTimer = setTimeout(() => {
+      setShowingIndex(-1);
       setStatus("play");
-    }, 1200 * patternLength);
-  };
+    }, newPattern.length * displayDelay + 300);
+    timersRef.current.push(endTimer);
+  }; // ✅ FIXED: properly close generatePattern function
 
   const handleTileClick = async (index) => {
     if (status !== "play") return;
-    // ignore repeated clicks on the same tile
     if (userClicks.includes(index)) return;
 
-    // ❌ Wrong click: tile not part of the pattern
+    // ❌ Wrong click
     if (!pattern.includes(index)) {
       setStatus("lose");
       setMessage(`❌ Wrong tile! You reached level ${level}`);
@@ -76,11 +91,9 @@ export default function MemoryTest() {
     const newClicks = [...userClicks, index];
     setUserClicks(newClicks);
 
-    // ✅ Completed pattern correctly (order no longer matters)
     if (newClicks.length === pattern.length) {
       setStatus("win");
       setMessage("✅ Great memory! Click Next to continue...");
-      // enable Next button after a short delay so the user can see the result
       setNextEnabled(false);
       if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
       nextEnableTimerRef.current = setTimeout(() => setNextEnabled(true), 800);
@@ -88,7 +101,6 @@ export default function MemoryTest() {
   };
 
   const handleRestart = () => {
-    // reset clicks and message and regenerate pattern even if level is same
     setUserClicks([]);
     setMessage("");
     setStatus("watch");
@@ -97,6 +109,14 @@ export default function MemoryTest() {
     if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
     generatePattern();
   };
+
+  // cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach((t) => clearTimeout(t));
+      timersRef.current = [];
+    };
+  }, []);
 
   return (
     <div
@@ -137,7 +157,7 @@ export default function MemoryTest() {
               height: "80px",
               borderRadius: "10px",
               backgroundColor:
-                pattern.includes(i) && status === "watch"
+                showingIndex === i && status === "watch"
                   ? "gold"
                   : userClicks.includes(i)
                   ? "lightgreen"
@@ -149,27 +169,14 @@ export default function MemoryTest() {
         ))}
       </div>
 
-      {/* Restart Button */}
       {status === "lose" && (
         <div style={{ marginTop: "20px" }}>
-          <p style={{ fontSize: "1.1rem", margin: "8px 0" }}>Your score: {Math.max(0, level - 1)}</p>
+          <p style={{ fontSize: "1.1rem", margin: "8px 0" }}>
+            Your score: {Math.max(0, level - 1)}
+          </p>
           <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
             <button
-              onClick={handleRestart}
-              style={{
-                padding: "10px 25px",
-                background: "#ef4444",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
-            >
-              🔁 Try Again
-            </button>
-            <button
-              onClick={() => navigate('/home')}
+              onClick={() => navigate("/home")}
               style={{
                 padding: "10px 25px",
                 background: "#3b82f6",
@@ -185,11 +192,11 @@ export default function MemoryTest() {
           </div>
         </div>
       )}
+
       {status === "win" && (
         <button
           onClick={() => {
             if (!nextEnabled) return;
-            // clear any pending timer
             if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
             setLevel((l) => l + 1);
             setStatus("watch");
@@ -216,3 +223,4 @@ export default function MemoryTest() {
     </div>
   );
 }
+

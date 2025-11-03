@@ -100,6 +100,7 @@ export default function NumberMemory() {
         padding: "2rem",
         minHeight: "100vh",
         background: "#f7f8fa",
+        color: "#111",
         fontFamily: "Poppins, sans-serif",
       }}
     >
@@ -135,16 +136,31 @@ export default function NumberMemory() {
       {phase === "show" && (
         <>
           <p>Memorize this number:</p>
-          <h2
-            style={{
-              fontSize: "2.2rem",
-              letterSpacing: "3px",
-              opacity: progress / 100,
-              transition: "opacity 0.3s ease",
-            }}
-          >
-            {number}
-          </h2>
+          {/** show the generated number; if it's empty for any reason fall back to lastNumber saved in sessionStorage */}
+          {
+            (() => {
+              const displayNumber = number || sessionStorage.getItem("lastNumber") || "—";
+              return (
+                <h2
+                  style={{
+                    fontSize: "2.6rem",
+                    letterSpacing: "4px",
+                    opacity: progress / 100,
+                    transition: "opacity 0.2s ease",
+                    color: "#111",
+                    background: "#fff",
+                    display: "inline-block",
+                    padding: "12px 20px",
+                    borderRadius: 8,
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+                    minWidth: 160,
+                  }}
+                >
+                  {displayNumber}
+                </h2>
+              );
+            })()
+          }
         </>
       )}
 
