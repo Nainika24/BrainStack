@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MemoryTest() {
   const [grid, setGrid] = useState([]);
@@ -9,17 +10,28 @@ export default function MemoryTest() {
   const [message, setMessage] = useState("");
   const [showingIndex, setShowingIndex] = useState(-1);
   const timersRef = React.useRef([]);
+  const [nextEnabled, setNextEnabled] = useState(false);
+  const playTimerRef = useRef(null);
+  const nextEnableTimerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     generatePattern();
+    return () => {
+      // cleanup timers if level changes/unmount
+      if (playTimerRef.current) clearTimeout(playTimerRef.current);
+      if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
+    };
   }, [level]);
 
   const generatePattern = () => {
     const patternLength = level + 2;
-    const newPattern = Array.from(
-      { length: patternLength },
-      () => Math.floor(Math.random() * 16)
-    );
+    // ensure unique tiles in the pattern so order doesn't matter
+    const set = new Set();
+    while (set.size < patternLength) {
+      set.add(Math.floor(Math.random() * 16));
+    }
+    const newPattern = Array.from(set);
     setPattern(newPattern);
     setUserClicks([]);
     setStatus("watch");
@@ -42,6 +54,9 @@ export default function MemoryTest() {
     // after the sequence ends, clear highlight and switch to play
     const endTimer = setTimeout(() => {
       setShowingIndex(-1);
+    // After pattern shown, let user play
+    if (playTimerRef.current) clearTimeout(playTimerRef.current);
+    playTimerRef.current = setTimeout(() => {
       setStatus("play");
     }, newPattern.length * displayDelay + 300);
     timersRef.current.push(endTimer);
@@ -49,12 +64,11 @@ export default function MemoryTest() {
 
   const handleTileClick = async (index) => {
     if (status !== "play") return;
+    // ignore repeated clicks on the same tile
+    if (userClicks.includes(index)) return;
 
-    const newClicks = [...userClicks, index];
-    setUserClicks(newClicks);
-
-    // ❌ Wrong click
-    if (index !== pattern[newClicks.length - 1]) {
+    // ❌ Wrong click: tile not part of the pattern
+    if (!pattern.includes(index)) {
       setStatus("lose");
       setMessage(`❌ Wrong tile! You reached level ${level}`);
 
@@ -78,18 +92,30 @@ export default function MemoryTest() {
       return;
     }
 
-    // ✅ Completed pattern correctly
+    // correct click
+    const newClicks = [...userClicks, index];
+    setUserClicks(newClicks);
+
+    // ✅ Completed pattern correctly (order no longer matters)
     if (newClicks.length === pattern.length) {
       setStatus("win");
-      setMessage("✅ Great memory! Next level...");
-      setTimeout(() => setLevel((lvl) => lvl + 1), 1000);
+      setMessage("✅ Great memory! Click Next to continue...");
+      // enable Next button after a short delay so the user can see the result
+      setNextEnabled(false);
+      if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
+      nextEnableTimerRef.current = setTimeout(() => setNextEnabled(true), 800);
     }
   };
 
   const handleRestart = () => {
-    setLevel(1);
-    setStatus("watch");
+    // reset clicks and message and regenerate pattern even if level is same
+    setUserClicks([]);
     setMessage("");
+    setStatus("watch");
+    setNextEnabled(false);
+    if (playTimerRef.current) clearTimeout(playTimerRef.current);
+    if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
+    generatePattern();
   };
 
   // cleanup timers on unmount
@@ -153,20 +179,66 @@ export default function MemoryTest() {
 
       {/* Restart Button */}
       {status === "lose" && (
+        <div style={{ marginTop: "20px" }}>
+          <p style={{ fontSize: "1.1rem", margin: "8px 0" }}>Your score: {Math.max(0, level - 1)}</p>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+            <button
+              onClick={handleRestart}
+              style={{
+                padding: "10px 25px",
+                background: "#ef4444",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+              }}
+            >
+              🔁 Try Again
+            </button>
+            <button
+              onClick={() => navigate('/home')}
+              style={{
+                padding: "10px 25px",
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                fontSize: "1rem",
+              }}
+            >
+              ← Back to Home
+            </button>
+          </div>
+        </div>
+      )}
+      {status === "win" && (
         <button
-          onClick={handleRestart}
+          onClick={() => {
+            if (!nextEnabled) return;
+            // clear any pending timer
+            if (nextEnableTimerRef.current) clearTimeout(nextEnableTimerRef.current);
+            setLevel((l) => l + 1);
+            setStatus("watch");
+            setMessage("");
+            setNextEnabled(false);
+          }}
+          disabled={!nextEnabled}
           style={{
             marginTop: "20px",
             padding: "10px 25px",
-            background: "#ef4444",
+            background: nextEnabled ? "#4caf50" : "#9e9e9e",
             color: "white",
             border: "none",
             borderRadius: "8px",
-            cursor: "pointer",
+            cursor: nextEnabled ? "pointer" : "not-allowed",
             fontSize: "1rem",
+            marginLeft: "10px",
+            opacity: nextEnabled ? 1 : 0.7,
           }}
         >
-          🔁 Try Again
+          ▶️ Next Level
         </button>
       )}
     </div>

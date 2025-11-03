@@ -10,7 +10,7 @@ export default function Home() {
         <Link to="/reaction">Reaction Time</Link>
         <Link to="/typing">Typing Test</Link>
         <Link to="/aim">Aim Trainer</Link>
-  <Link to="/verbal-memory">Verbal Memory</Link>
+        <Link to="/verbal-memory">Verbal Memory</Link>
         <Link to="/memory-test">Memory Test</Link>
         <Link to="/number-memory">Number Memory</Link>
         <Link to="/leaderboard">Leaderboard</Link>
