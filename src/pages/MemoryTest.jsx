@@ -7,6 +7,8 @@ export default function MemoryTest() {
   const [level, setLevel] = useState(1);
   const [status, setStatus] = useState("watch"); // "watch", "play", "win", "lose"
   const [message, setMessage] = useState("");
+  const [showingIndex, setShowingIndex] = useState(-1);
+  const timersRef = React.useRef([]);
 
   useEffect(() => {
     generatePattern();
@@ -22,11 +24,27 @@ export default function MemoryTest() {
     setUserClicks([]);
     setStatus("watch");
     setMessage("");
+    setShowingIndex(-1);
 
-    // After pattern shown, let user play
-    setTimeout(() => {
+    // clear any previous timers
+    timersRef.current.forEach((t) => clearTimeout(t));
+    timersRef.current = [];
+
+    // sequentially flash each index in the pattern
+    const displayDelay = 800; // ms per item
+    newPattern.forEach((idx, i) => {
+      const t = setTimeout(() => {
+        setShowingIndex(idx);
+      }, i * displayDelay);
+      timersRef.current.push(t);
+    });
+
+    // after the sequence ends, clear highlight and switch to play
+    const endTimer = setTimeout(() => {
+      setShowingIndex(-1);
       setStatus("play");
-    }, 1200 * patternLength);
+    }, newPattern.length * displayDelay + 300);
+    timersRef.current.push(endTimer);
   };
 
   const handleTileClick = async (index) => {
@@ -74,6 +92,14 @@ export default function MemoryTest() {
     setMessage("");
   };
 
+  // cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach((t) => clearTimeout(t));
+      timersRef.current = [];
+    };
+  }, []);
+
   return (
     <div
       style={{
@@ -113,7 +139,7 @@ export default function MemoryTest() {
               height: "80px",
               borderRadius: "10px",
               backgroundColor:
-                pattern.includes(i) && status === "watch"
+                showingIndex === i && status === "watch"
                   ? "gold"
                   : userClicks.includes(i)
                   ? "lightgreen"

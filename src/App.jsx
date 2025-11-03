@@ -7,6 +7,10 @@ import Results from "./pages/Results";
 import Leaderboard from "./pages/Leaderboard";
 import NumberMemory from "./pages/NumberMemory";
 import MemoryTest from "./pages/MemoryTest";
+import TypingTest from "./pages/TypingTest";
+import AimTrainer from "./pages/AimTrainer";
+import VerbalMemory from "./pages/VerbalMemory";
+
 
 
 
@@ -24,6 +28,9 @@ function App() {
         <Route path="/reaction" element={<ReactionTest />} />
         <Route path="/memory-test" element={<MemoryTest />} />
         <Route path="/number-memory" element={<NumberMemory />} />
+  <Route path="/typing" element={<TypingTest />} />
+  <Route path="/aim" element={<AimTrainer />} />
+        <Route path="/verbal-memory" element={<VerbalMemory />} />
         <Route path="/results" element={<Results />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
