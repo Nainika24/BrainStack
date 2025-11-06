@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import "./MemoryTest.css";
 
 export default function MemoryTest() {
   const [pattern, setPattern] = useState([]);
@@ -102,12 +103,15 @@ export default function MemoryTest() {
 
   return (
     <div
+      className="memory-test"
       style={{
-        textAlign: "center",
-        padding: "2rem",
-        backgroundColor: "#f8fafc",
         minHeight: "100vh",
-        fontFamily: "Poppins, sans-serif",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "40px 20px",
       }}
     >
       <h1>🧠 Memory Test</h1>
@@ -120,32 +124,15 @@ export default function MemoryTest() {
           : message}
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 80px)",
-          gap: "10px",
-          justifyContent: "center",
-          marginTop: "2rem",
-        }}
-      >
+      <div className="grid-container">
         {Array.from({ length: 16 }, (_, i) => (
           <div
             key={i}
             onClick={() => handleTileClick(i)}
-            style={{
-              width: "80px",
-              height: "80px",
-              borderRadius: "10px",
-              backgroundColor:
-                showingIndex === i && status === "watch"
-                  ? "gold"
-                  : userClicks.includes(i)
-                  ? "lightgreen"
-                  : "#d1d5db",
-              transition: "background-color 0.3s",
-              cursor: status === "play" ? "pointer" : "not-allowed",
-            }}
+            className={`grid-tile 
+    ${showingIndex === i && status === "watch" ? "active" : ""}
+    ${userClicks.includes(i) ? "clicked" : ""}
+    ${status !== "play" ? "disabled" : ""}`}
           />
         ))}
       </div>
@@ -156,32 +143,11 @@ export default function MemoryTest() {
             Your score: {Math.max(0, level - 1)}
           </p>
           <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-            <button
-              onClick={handleRestart}
-              style={{
-                padding: "10px 25px",
-                background: "#ef4444",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
-            >
+            <button onClick={handleRestart} className="btn btn-red">
               🔁 Try Again
             </button>
-            <button
-              onClick={() => navigate("/home")}
-              style={{
-                padding: "10px 25px",
-                background: "#3b82f6",
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "1rem",
-              }}
-            >
+
+            <button onClick={() => navigate("/home")} className="btn btn-blue">
               ← Back to Home
             </button>
           </div>
@@ -198,18 +164,7 @@ export default function MemoryTest() {
             setNextEnabled(false);
           }}
           disabled={!nextEnabled}
-          style={{
-            marginTop: "20px",
-            padding: "10px 25px",
-            background: nextEnabled ? "#4caf50" : "#9e9e9e",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: nextEnabled ? "pointer" : "not-allowed",
-            fontSize: "1rem",
-            marginLeft: "10px",
-            opacity: nextEnabled ? 1 : 0.7,
-          }}
+          className={`btn ${nextEnabled ? "btn-green" : "btn-grey"}`}
         >
           ▶️ Next Level
         </button>
