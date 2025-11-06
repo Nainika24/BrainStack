@@ -1,0 +1,119 @@
+/* Full page layout */
+.number-container {
+  min-height: 100vh;
+  width: 100%;
+  padding: 40px 0;
+  background: linear-gradient(135deg, #1a2332 0%, #2d3e50 100%);
+  color: #f8fafc;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Title */
+.number-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-align: center;
+  background: linear-gradient(135deg, #ff68d8, #8b5cf6, #4f9cff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Level & Best text */
+.number-info {
+  font-size: 20px;
+  margin-bottom: 30px;
+  color: #d1d8e6;
+}
+
+/* Card container */
+.number-card {
+  background: rgba(21, 30, 45, 0.7);
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 16px 48px rgba(3, 7, 18, 0.65);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  width: 450px;
+  max-width: 90%;
+}
+
+/* Progress bar background */
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(15, 23, 42, 0.65);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+/* Progress bar fill */
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(135deg, #ff6bcb 0%, #60a5fa 100%);
+  transition: width 0.1s linear;
+}
+
+/* Number display */
+.number-display {
+  font-size: 40px;
+  letter-spacing: 4px;
+  color: #fff;
+  padding: 15px 25px;
+  background: rgba(15, 23, 42, 0.55);
+  border-radius: 12px;
+  display: inline-block;
+  box-shadow: 0 12px 28px rgba(3, 7, 18, 0.55);
+  margin-top: 15px;
+}
+
+/* Input field */
+.number-input {
+  width: 200px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  margin-top: 10px;
+  background: rgba(148, 163, 184, 0.2);
+  color: #f8fafc;
+}
+
+/* Buttons */
+.number-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  transition: 0.25s;
+  background: linear-gradient(135deg, #ff6bcb 0%, #a855f7 100%);
+}
+
+.number-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(168, 85, 247, 0.5);
+}
+
+/* Red button for Try Again */
+.try-btn {
+  background: linear-gradient(135deg, #fb7185 0%, #f97316 100%);
+}
+
+.try-btn:hover {
+  box-shadow: 0 8px 22px rgba(255, 75, 75, 0.5);
+}
+
+/* Message Result */
+.result-message {
+  font-size: 28px;
+  margin-top: 15px;
+  color: #f1f5f9;
+}

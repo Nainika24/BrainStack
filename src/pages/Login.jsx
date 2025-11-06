@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -32,35 +33,50 @@ export default function Login() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          style={{ margin: "8px", padding: "8px", width: "250px" }}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          style={{ margin: "8px", padding: "8px", width: "250px" }}
-        />
-        <button type="submit" style={{ marginTop: "10px", padding: "10px 20px" }}>
-          Login
-        </button>
-      </form>
-      <p style={{ color: "green", marginTop: "10px" }}>{message}</p>
-      <p>
-        Don’t have an account? <a href="/register">Register</a>
-      </p>
+    <div className="login-page">
+      <div className="login-card">
+        <h1 className="login-title">Welcome Back</h1>
+        <p className="login-subtitle">Sign in to continue to BrainStack.</p>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <label className="login-label" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="login-input"
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+          <label className="login-label" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="login-input"
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+          <button className="login-button" type="submit">
+            Sign In
+          </button>
+        </form>
+        {message && (
+          <p style={{ marginTop: "4px", color: message.includes("success") ? "#16a34a" : "#dc2626" }}>
+            {message}
+          </p>
+        )}
+        <div className="login-footer">
+          Don’t have an account? <a href="/register">Create one</a>
+        </div>
+      </div>
     </div>
   );
 }
