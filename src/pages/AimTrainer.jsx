@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../api/axios";
+import "./AimTrainer.css";
 
 export default function AimTrainer() {
   const [running, setRunning] = useState(false);
@@ -16,8 +17,8 @@ export default function AimTrainer() {
     if (!cont) return;
     const rect = cont.getBoundingClientRect();
     const size = 40;
-    const x = Math.max(10, Math.random() * (rect.width - size));
-    const y = Math.max(10, Math.random() * (rect.height - size));
+    const x = Math.random() * (rect.width - size);
+    const y = Math.random() * (rect.height - size);
     setTargetPos({ x, y });
   };
 
@@ -50,95 +51,87 @@ export default function AimTrainer() {
 
   const stop = async () => {
     setRunning(false);
-    // Save hits as score
     const userId = localStorage.getItem("userId");
-    if (!userId) {
+    if (!userId || !/^[0-9a-fA-F]{24}$/.test(userId)) {
       setSavedMessage("Not logged in — score not saved.");
       return;
     }
-    if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
-      setSavedMessage("Invalid user ID — score not saved.");
-      return;
-    }
+
     try {
       await api.post("/scores/add", {
         userId,
         testType: "Aim Trainer",
         score: hits,
       });
-      setSavedMessage("Score saved to leaderboard!");
-    } catch (err) {
-      console.error("Error saving aim score:", err);
-      setSavedMessage("Failed to save score.");
+      setSavedMessage("✅ Score saved!");
+    } catch {
+      setSavedMessage("❌ Failed to save.");
     }
   };
 
-  const handleContainerClick = (e) => {
-    // if click inside target area count hit else miss
-    const cont = containerRef.current;
-    if (!cont) return;
-    const rect = cont.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
-    const tx = targetPos.x + 20; // center
-    const ty = targetPos.y + 20;
-    const dist = Math.hypot(clickX - tx, clickY - ty);
-    if (dist <= 25 && running) {
+  const handleClick = (e) => {
+    if (!running) return;
+    const cont = containerRef.current.getBoundingClientRect();
+    const clickX = e.clientX - cont.left;
+    const clickY = e.clientY - cont.top;
+    const centerX = targetPos.x + 20;
+    const centerY = targetPos.y + 20;
+    const dist = Math.hypot(clickX - centerX, clickY - centerY);
+
+    if (dist <= 25) {
       setHits((h) => h + 1);
       spawnTarget();
-    } else if (running) {
+    } else {
       setMisses((m) => m + 1);
     }
   };
 
   return (
-    <div style={{ padding: 20, textAlign: "center", fontFamily: "Poppins, sans-serif" }}>
-      <h1>Aim Trainer</h1>
-      <p>Click the targets as they appear. Test length: 20 seconds.</p>
+    <div className="aim-container">
+      <h1>🎯 Aim Trainer</h1>
+      <p className="aim-description">
+        Click the target as quickly and accurately as you can before the timer
+        runs out.
+      </p>
 
-      <div style={{ margin: "12px auto" }}>
-        <button onClick={start} disabled={running} style={{ marginRight: 8, padding: "8px 12px" }}>
+      <div className="aim-stats">
+        <div className="aim-stat-card">
+          <strong>Time Left</strong>
+          <span>{timeLeft}s</span>
+        </div>
+        <div className="aim-stat-card">
+          <strong>Hits</strong>
+          <span>{hits}</span>
+        </div>
+        <div className="aim-stat-card">
+          <strong>Misses</strong>
+          <span>{misses}</span>
+        </div>
+      </div>
+
+      <div className="aim-buttons">
+        <button onClick={start} disabled={running} className="aim-btn">
           Start
         </button>
-        <button onClick={stop} disabled={!running} style={{ padding: "8px 12px" }}>
+        <button
+          onClick={stop}
+          disabled={!running}
+          className="aim-btn secondary"
+        >
           Stop
         </button>
       </div>
 
-      <div style={{ marginTop: 12 }}>Time left: {timeLeft}s</div>
-      <div style={{ marginTop: 8 }}>Hits: {hits} — Misses: {misses}</div>
-
-      <div
-        ref={containerRef}
-        onClick={handleContainerClick}
-        style={{
-          width: "80%",
-          height: 360,
-          margin: "16px auto",
-          border: "2px solid #ddd",
-          position: "relative",
-          background: "#f9f9f9",
-        }}
-      >
+      <div className="aim-area" ref={containerRef} onClick={handleClick}>
         {running && (
           <div
-            style={{
-              position: "absolute",
-              left: targetPos.x,
-              top: targetPos.y,
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              background: "#ff5252",
-              boxShadow: "0 0 6px rgba(0,0,0,0.2)",
-            }}
+            className="target"
+            style={{ left: targetPos.x, top: targetPos.y }}
           />
         )}
       </div>
 
-      {savedMessage && (
-        <div style={{ marginTop: 12 }}>{savedMessage}</div>
-      )}
+      {savedMessage && <p className="aim-feedback">{savedMessage}</p>}
     </div>
   );
 }

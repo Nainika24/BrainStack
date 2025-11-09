@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import api from "../api/axios";
+import "./VerbalMemory.css";
 
 const WORD_BANK = [
   "apple","banana","orange","table","chair","window","river","mountain","dog","cat",
@@ -116,64 +117,75 @@ export default function VerbalMemory() {
   };
 
   return (
-    <div style={{ padding: 20, fontFamily: "Poppins, sans-serif", textAlign: "center" }}>
+    <div className="verbal-container">
       <h1>Verbal Memory</h1>
-      <p>Memorize the words as they appear. After the sequence, select the words you remember from the grid.</p>
+      <p className="verbal-text">
+        Memorize the words as they appear. After the sequence, select the words you remember from the grid.
+      </p>
 
       {status === "idle" && (
-        <div>
-          <button onClick={startTest} style={{ padding: "10px 20px", fontSize: 16 }}>Start Test</button>
+        <div className="verbal-actions">
+          <button className="verbal-btn" onClick={startTest}>
+            Start Test
+          </button>
         </div>
       )}
 
       {status === "show" && (
-        <div style={{ marginTop: 30 }}>
-          <div style={{ fontSize: 36, fontWeight: 700, padding: "18px 28px", background: "#fff", display: "inline-block", borderRadius: 8, boxShadow: "0 6px 18px rgba(0,0,0,0.08)", color: "#111" }}>
+        <div className="verbal-stage">
+          <div className="verbal-display-card">
             {displayIndex >= 0 && sequence[displayIndex] ? sequence[displayIndex] : ""}
           </div>
-          <div style={{ marginTop: 12, color: "#111" }}>{displayIndex >= 0 ? `Word ${displayIndex + 1} of ${sequence.length}` : ""}</div>
+          <div className="verbal-status">
+            {displayIndex >= 0 ? `Word ${displayIndex + 1} of ${sequence.length}` : ""}
+          </div>
         </div>
       )}
 
       {status === "recall" && (
-        <div style={{ marginTop: 24 }}>
-          <div style={{ maxWidth: 900, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12 }}>
+        <div className="verbal-stage">
+          <div className="verbal-word-grid">
             {gridWords.map((w) => {
               const isSelected = selected.includes(w);
               return (
                 <div
                   key={w}
+                  className={`verbal-word ${isSelected ? "selected" : ""}`}
                   onClick={() => toggleSelect(w)}
-                  style={{
-                    padding: 12,
-                    background: isSelected ? "#4caf50" : "#fff",
-                    color: isSelected ? "#fff" : "#111",
-                    borderRadius: 8,
-                    cursor: "pointer",
-                    boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
-                    userSelect: "none",
-                  }}
                 >
                   {w}
                 </div>
               );
             })}
           </div>
-
-          <div style={{ marginTop: 18 }}>
-            <button onClick={finishRecall} style={{ padding: "8px 16px", marginRight: 8 }}>Done</button>
-            <button onClick={handleRestart} style={{ padding: "8px 16px" }}>Cancel</button>
+          <div className="verbal-actions">
+            <button className="verbal-btn success" onClick={finishRecall}>
+              Done
+            </button>
+            <button className="verbal-btn secondary" onClick={handleRestart}>
+              Cancel
+            </button>
           </div>
         </div>
       )}
 
       {status === "result" && (
-        <div style={{ marginTop: 24 }}>
+        <div className="verbal-stage">
           <h2>Results</h2>
-          <p>You selected {selected.length} words — {correctCount} correct</p>
-          <p>{savedMessage}</p>
-          <div style={{ marginTop: 12 }}>
-            <button onClick={handleRestart} style={{ padding: "8px 14px", marginRight: 8 }}>Play Again</button>
+          <p className="verbal-status">
+            You selected {selected.length} words — {correctCount} correct
+          </p>
+          <p
+            className={`verbal-message ${
+              savedMessage.includes("Saved") ? "success" : savedMessage.includes("Failed") ? "error" : ""
+            }`}
+          >
+            {savedMessage}
+          </p>
+          <div className="verbal-actions">
+            <button className="verbal-btn" onClick={handleRestart}>
+              Play Again
+            </button>
           </div>
         </div>
       )}

@@ -1,0 +1,115 @@
+.aim-container {
+  width: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a2332 0%, #2d3e50 100%);
+  color: #f8fafc;
+  font-family: "Poppins", sans-serif;
+  padding: 18px 12px 22px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.aim-container h1 {
+  color: #60a5fa;
+  font-size: 2.2rem;
+  margin-bottom: 4px;
+}
+
+.aim-description {
+  font-size: 1.1rem;
+  color: #cbd5f5;
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.aim-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.aim-stat-card {
+  background: rgba(15, 23, 42, 0.55);
+  border-radius: 18px;
+  padding: 14px 22px;
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.4);
+  color: #f8fafc;
+}
+
+.aim-stat-card strong {
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.aim-stat-card span {
+  display: block;
+  margin-top: 6px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.aim-feedback {
+  margin-top: 8px;
+  font-size: 1rem;
+  color: #f8fafc;
+}
+
+.aim-buttons {
+  margin: 6px 0 0;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.aim-btn {
+  padding: 8px 18px;
+  margin: 0 10px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #a855f7, #ff6bcb);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.aim-btn.secondary {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+
+.aim-btn:hover {
+  transform: scale(1.05);
+}
+
+.aim-area {
+  width: min(100%, 780px);
+  height: clamp(260px, 42vh, 420px);
+  margin: 14px auto 0;
+  border: 2px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
+  box-shadow: inset 0 0 35px rgba(2, 6, 23, 0.45);
+  position: relative;
+}
+
+.target {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fb7185, #f97316);
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 15px rgba(255, 82, 82, 0.6);
+}

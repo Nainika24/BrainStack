@@ -13,8 +13,19 @@ export default function Home() {
 
   return (
     <div className="brainstack-container">
+      {/* Navigation Bar */}
+      <nav className="navbar">
+        <div className="nav-logo">🧠 BrainStack</div>
+        <ul className="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#leaderboard">Leaderboard</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+
       {/* Hero Section */}
-      <header className="hero-section">
+      <header id="home" className="hero-section">
         <div className="logo-container">
           <div className="brain-logo">🧠</div>
         </div>
@@ -39,7 +50,7 @@ export default function Home() {
       </section>
 
       {/* Leaderboard Section */}
-      <section className="leaderboard-section">
+      <section id="leaderboard" className="leaderboard-section">
         <h2 className="section-heading">🏆 Leaderboard</h2>
         <p className="section-subtitle">Top scores across all BrainStack games</p>
         <div className="leaderboard-grid">
@@ -59,7 +70,7 @@ export default function Home() {
       </section>
 
       {/* Results Section */}
-      <section className="results-section">
+      <section id="results" className="results-section">
         <h2 className="section-heading">📊 My Results</h2>
         <p className="section-subtitle">Track your recent performances</p>
         <div className="results-grid">
@@ -79,27 +90,27 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="about-section">
+      <section id="about" className="about-section">
         <h2 className="section-heading">💡 About BrainStack</h2>
         <p className="about-text">
-          BrainStack is a cognitive training platform designed to make learning and mental exercise fun! 
-          We provide interactive games that test your reflexes, memory, focus, and problem-solving skills.
+          BrainStack is a cognitive training platform designed to make mental exercise fun and engaging. 
+          Play interactive games that enhance your memory, focus, and reflexes — and see your growth over time!
         </p>
         <div className="about-features">
           <div className="about-card">
             <div className="about-icon">🎮</div>
             <h3>Interactive Games</h3>
-            <p>Play engaging mini-games that boost your brain’s performance and mental agility.</p>
+            <p>Play fun brain-training mini-games that improve focus, memory, and reaction.</p>
           </div>
           <div className="about-card">
             <div className="about-icon">📈</div>
             <h3>Track Progress</h3>
-            <p>Monitor your improvements with detailed analytics and personal score history.</p>
+            <p>Monitor your scores and see how you improve over time with analytics.</p>
           </div>
           <div className="about-card">
-            <div className="about-icon">🤝</div>
+            <div className="about-icon">🌍</div>
             <h3>Compete Globally</h3>
-            <p>See how you rank on the global leaderboard and challenge your friends!</p>
+            <p>Compare scores with players worldwide on the global leaderboard.</p>
           </div>
         </div>
       </section>

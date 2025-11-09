@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./NumberMemory.css"; // ✅ Import the CSS file
 
 export default function NumberMemory() {
   const [number, setNumber] = useState("");
@@ -11,7 +12,7 @@ export default function NumberMemory() {
     localStorage.getItem("bestNumberMemory") || 0
   );
 
-  // Generate a random number for each level
+  // Generate number by digits = level
   const generateNumber = (len) => {
     return Math.floor(
       Math.random() * Math.pow(10, len - 1) + Math.pow(10, len - 1)
@@ -26,25 +27,26 @@ export default function NumberMemory() {
     setInput("");
     setProgress(100);
 
-    // countdown progress bar
+    // Timer for number show phase
     const duration = 2000 + level * 500;
     const start = Date.now();
+
     const timer = setInterval(() => {
       const elapsed = Date.now() - start;
       const pct = Math.max(0, 100 - (elapsed / duration) * 100);
       setProgress(pct);
       if (elapsed >= duration) clearInterval(timer);
-    }, 50);
+    }, 60);
 
-    // hide number after time
+    // Hide number after timer
     const timeout = setTimeout(() => {
       setPhase("recall");
       setNumber("");
     }, duration);
 
     return () => {
-      clearTimeout(timeout);
       clearInterval(timer);
+      clearTimeout(timeout);
     };
   }, [level]);
 
@@ -54,22 +56,35 @@ export default function NumberMemory() {
     }
   }, [number, phase]);
 
+  useEffect(() => {
+    const prevBackground = document.body.style.background;
+    const prevColor = document.body.style.color;
+    document.body.style.background =
+      "linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)";
+    document.body.style.color = "#f8fafc";
+    return () => {
+      document.body.style.background = prevBackground;
+      document.body.style.color = prevColor;
+    };
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const correctNumber = sessionStorage.getItem("lastNumber");
+    const correct = sessionStorage.getItem("lastNumber");
 
-    if (input === correctNumber) {
+    if (input === correct) {
       setMessage("✅ Correct!");
+
+      // Update best score
       setBestScore((prev) => {
         const newBest = Math.max(prev, level);
         localStorage.setItem("bestNumberMemory", newBest);
         return newBest;
       });
+
       setPhase("result");
-      // Previously we auto-advanced after 1s; remove automatic progression so
-      // the user advances only when they click the Next Level button.
     } else {
-      setMessage(`❌ Wrong! It was ${correctNumber}`);
+      setMessage(`❌ Wrong! It was ${correct}`);
       setPhase("result");
 
       // Save score to backend
@@ -93,137 +108,87 @@ export default function NumberMemory() {
     setPhase("show");
   };
 
+  // ✅ For display fallback
+  const displayNumber =
+    number || sessionStorage.getItem("lastNumber") || "—";
+
   return (
     <div
+      className="number-container"
       style={{
-        textAlign: "center",
-        padding: "2rem",
-        minHeight: "100vh",
-        background: "#f7f8fa",
-        color: "#111",
-        fontFamily: "Poppins, sans-serif",
+        background: "linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)",
+        color: "#f8fafc",
       }}
     >
-      <h1>🔢 Number Memory</h1>
-      <p>
-        <b>Level:</b> {level} | <b>Best:</b> {bestScore}
+      <h1 className="number-title">🔢 Number Memory</h1>
+      <p className="number-info">
+        Level: <b>{level}</b> | Best: <b>{bestScore}</b>
       </p>
 
-      {/* Progress Bar */}
-      {phase === "show" && (
-        <div
-          style={{
-            width: "300px",
-            height: "10px",
-            background: "#ddd",
-            margin: "20px auto",
-            borderRadius: "10px",
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              height: "10px",
-              width: `${progress}%`,
-              background: "#4caf50",
-              transition: "width 0.1s linear",
-            }}
-          />
-        </div>
-      )}
+      <div
+        className="number-card"
+        style={{
+          background: "rgba(15, 23, 42, 0.6)",
+          boxShadow: "0 18px 42px rgba(2, 6, 23, 0.45)",
+        }}
+      >
+        {/* ✅ SHOW PHASE */}
+        {phase === "show" && (
+          <>
+            {/* Progress Bar */}
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
 
-      {/* Number display */}
-      {phase === "show" && (
-        <>
-          <p>Memorize this number:</p>
-          {/** show the generated number; if it's empty for any reason fall back to lastNumber saved in sessionStorage */}
-          {
-            (() => {
-              const displayNumber = number || sessionStorage.getItem("lastNumber") || "—";
-              return (
-                <h2
-                  style={{
-                    fontSize: "2.6rem",
-                    letterSpacing: "4px",
-                    opacity: progress / 100,
-                    transition: "opacity 0.2s ease",
-                    color: "#111",
-                    background: "#fff",
-                    display: "inline-block",
-                    padding: "12px 20px",
-                    borderRadius: 8,
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-                    minWidth: 160,
-                  }}
-                >
-                  {displayNumber}
-                </h2>
-              );
-            })()
-          }
-        </>
-      )}
+            <p>Memorize this number:</p>
+            <h2 className="number-display">{displayNumber}</h2>
+          </>
+        )}
 
-      {/* Recall phase */}
-      {phase === "recall" && (
-        <form onSubmit={handleSubmit}>
-          <p>Enter the number you remember:</p>
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            style={{
-              padding: "8px",
-              fontSize: "1.2rem",
-              textAlign: "center",
-              borderRadius: "6px",
-              border: "1px solid #aaa",
-            }}
-            autoFocus
-          />
-          <br />
-          <button
-            type="submit"
-            style={{
-              marginTop: "12px",
-              padding: "10px 25px",
-              background: "#4caf50",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-            }}
-          >
-            Submit
-          </button>
-        </form>
-      )}
+        {/* ✅ RECALL PHASE */}
+        {phase === "recall" && (
+          <form onSubmit={handleSubmit}>
+            <p>Enter the number you remember:</p>
 
-      {/* Result phase */}
-      {phase === "result" && (
-        <>
-          <h2>{message}</h2>
-          <button
-            onClick={() => {
-              if (message.startsWith("✅")) setLevel((l) => l + 1);
-              else handleRestart();
-            }}
-            style={{
-              marginTop: "15px",
-              padding: "10px 25px",
-              background: message.startsWith("✅") ? "#4caf50" : "#ff5252",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-            }}
-          >
-            {message.startsWith("✅") ? "Next Level" : "Try Again"}
-          </button>
-        </>
-      )}
+            <input
+              type="text"
+              className="number-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              autoFocus
+            />
+
+            <button type="submit" className="number-btn">
+              Submit
+            </button>
+          </form>
+        )}
+
+        {/* ✅ RESULT PHASE */}
+        {phase === "result" && (
+          <>
+            <h2 className="result-message">{message}</h2>
+
+            <button
+              className={`number-btn ${
+                message.startsWith("✅") ? "" : "try-btn"
+              }`}
+              onClick={() => {
+                if (message.startsWith("✅")) {
+                  setLevel(level + 1);
+                } else {
+                  handleRestart();
+                }
+              }}
+            >
+              {message.startsWith("✅") ? "Next Level" : "Try Again"}
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

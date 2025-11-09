@@ -1,0 +1,41 @@
+.reaction-container {
+  height: 100vh;
+  width: 100vw;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f8fafc;
+  font-family: "Poppins", sans-serif;
+  flex-direction: column;
+  text-align: center;
+  transition: background-color 0.4s ease;
+}
+
+.reaction-message {
+  font-size: 2rem;
+  color: #f1f5f9;
+  margin-bottom: 10px;
+}
+
+.reaction-status {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+.reaction-btn {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #60a5fa, #a855f7);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.reaction-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(96, 165, 250, 0.6);
+}

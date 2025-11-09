@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../api/axios";
+import "./ReactionTest.css";
 
 export default function ReactionTest() {
   const [status, setStatus] = useState("waiting");
@@ -7,14 +8,11 @@ export default function ReactionTest() {
   const [startTime, setStartTime] = useState(null);
   const [reactionTime, setReactionTime] = useState(null);
   const [saved, setSaved] = useState(false);
-  // read userId once from localStorage; kept in state so tests during session can react
   const [userId, setUserId] = useState(() => localStorage.getItem("userId"));
 
   useEffect(() => {
-    // keep userId in sync if something else updates localStorage while app is open
     const id = localStorage.getItem("userId");
     if (id && id !== userId) setUserId(id);
-    // intentionally no dependency on userId to run once on mount
   }, []);
 
   const isValidObjectId = (id) => typeof id === "string" && /^[0-9a-fA-F]{24}$/.test(id);
@@ -44,16 +42,8 @@ export default function ReactionTest() {
       setReactionTime(time);
       setStatus("waiting");
 
-      // Only attempt to save if we have a valid userId
-      if (!userId) {
-        setMessage(`Your reaction time: ${time} ms — Not logged in, score not saved.`);
-        setSaved(false);
-        return;
-      }
-      if (!isValidObjectId(userId)) {
-        setMessage(`Your reaction time: ${time} ms — Invalid user ID, score not saved.`);
-        console.error("Invalid userId:", userId);
-        setSaved(false);
+      if (!userId || !isValidObjectId(userId)) {
+        setMessage(`Your reaction time: ${time} ms — Not saved.`);
         return;
       }
 
@@ -63,34 +53,30 @@ export default function ReactionTest() {
           testType: "Reaction Time",
           score: time,
         });
-        setMessage(`Your reaction time: ${time} ms — Saved to leaderboard!`);
+        setMessage(`Your reaction time: ${time} ms — Saved!`);
         setSaved(true);
       } catch (err) {
         console.error("Error saving score:", err);
-        setMessage(`Your reaction time: ${time} ms — Failed to save score.`);
-        setSaved(false);
+        setMessage(`Your reaction time: ${time} ms — Failed to save.`);
       }
     }
   };
 
+  const background =
+    status === "click"
+      ? "#16a34a"
+      : status === "ready"
+      ? "#f97316"
+      : "linear-gradient(135deg, #1a2332 0%, #2d3e50 100%)";
+
   return (
-    <div
-      onClick={handleClick}
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: status === "click" ? "green" : "red",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "24px",
-        cursor: "pointer",
-        transition: "background-color 0.3s",
-      }}
-    >
+    <div className="reaction-container" onClick={handleClick} style={{ background }}>
       <div>
-        <p>{message}</p>
+        <p className="reaction-message">{message}</p>
+        {reactionTime && (
+          <p className="reaction-status">Last reaction: {reactionTime} ms</p>
+        )}
+        {!saved && <p className="reaction-status">Click anywhere to play again</p>}
       </div>
     </div>
   );

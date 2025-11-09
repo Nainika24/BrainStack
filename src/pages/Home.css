@@ -6,26 +6,86 @@
   font-family: "Poppins", sans-serif;
 }
 
-/* Main Container */
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 50px;
+  background: rgba(15, 31, 42, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff6bcb, #a855f7, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links li a {
+  color: #d1d5e1;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #a855f7;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px 25px;
+  }
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+/* Container */
 .brainstack-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: #fff;
-  padding-bottom: 60px;
+  width: 100%;
+  padding-top: 90px;
 }
 
 /* Hero Section */
 .hero-section {
   text-align: center;
-  padding: 80px 20px 50px;
-}
-
-.logo-container {
-  animation: float 3s ease-in-out infinite;
+  padding: 120px 20px 60px;
 }
 
 .brain-logo {
   font-size: 80px;
+  animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -78,23 +138,6 @@
   box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
 }
 
-.game-icon {
-  font-size: 45px;
-  margin-bottom: 15px;
-}
-
-.game-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.game-description {
-  font-size: 15px;
-  color: #cbd5e1;
-  margin-bottom: 15px;
-}
-
 .play-button {
   background: linear-gradient(135deg, #a855f7, #ff6bcb);
   color: white;
@@ -111,10 +154,10 @@
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
 }
 
-/* Leaderboard Section */
+/* Leaderboard */
 .leaderboard-section {
-  margin-top: 80px;
   text-align: center;
+  margin-top: 80px;
 }
 
 .section-heading {
@@ -135,7 +178,6 @@
   justify-content: center;
   gap: 25px;
   flex-wrap: wrap;
-  padding: 0 20px;
 }
 
 .leaderboard-card {
@@ -143,33 +185,30 @@
   border-radius: 15px;
   padding: 20px 30px;
   width: 250px;
-  text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .leaderboard-card h3 {
   color: #ffcc70;
-  margin-bottom: 8px;
 }
 
-/* Results Section */
+/* Results */
 .results-section {
-  margin-top: 60px;
   text-align: center;
+  margin-top: 80px;
 }
 
 .results-grid {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 25px;
-  padding: 0 20px;
+  flex-wrap: wrap;
 }
 
 .results-card {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 20px 25px;
+  padding: 20px;
   width: 200px;
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
@@ -179,10 +218,65 @@
   font-weight: 700;
 }
 
+/* About Section */
+.about-section {
+  margin-top: 100px;
+  padding: 60px 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  max-width: 1100px;
+  width: 90%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.08);
+}
+
+.about-text {
+  color: #d1d5e1;
+  font-size: 1.1rem;
+  max-width: 850px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.about-features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.about-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+}
+
+.about-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.about-card h3 {
+  color: #60a5fa;
+  margin-bottom: 8px;
+}
+
 /* Footer */
 .footer {
   text-align: center;
-  color: #ccc;
-  margin-top: 60px;
-  font-size: 15px;
+  padding: 30px 0;
+  margin-top: 80px;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #b0b8c6;
+  font-size: 0.95rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
