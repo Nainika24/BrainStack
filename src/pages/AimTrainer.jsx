@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "./AimTrainer.css";
 
 export default function AimTrainer() {
+  const navigate = useNavigate();
   const [running, setRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(20);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
   const [targetPos, setTargetPos] = useState({ x: 50, y: 50 });
   const [savedMessage, setSavedMessage] = useState("");
   const containerRef = useRef(null);
@@ -17,8 +20,24 @@ export default function AimTrainer() {
     if (!cont) return;
     const rect = cont.getBoundingClientRect();
     const size = 40;
-    const x = Math.random() * (rect.width - size);
-    const y = Math.random() * (rect.height - size);
+    
+    // Calculate movement range based on time left
+    // As time decreases, the range of possible positions increases
+    const speedMultiplier = Math.min(2, 1 + (20 - timeLeft) / 10); // Increases up to 2x speed
+    const effectiveWidth = rect.width - size;
+    const effectiveHeight = rect.height - size;
+    
+    let x = Math.random() * effectiveWidth;
+    let y = Math.random() * effectiveHeight;
+    
+    // Optional: Add some bias towards the edges as speed increases
+    if (Math.random() < (speedMultiplier - 1) / 2) {
+      x = Math.random() < 0.5 ? 0 : effectiveWidth;
+    }
+    if (Math.random() < (speedMultiplier - 1) / 2) {
+      y = Math.random() < 0.5 ? 0 : effectiveHeight;
+    }
+    
     setTargetPos({ x, y });
   };
 
@@ -47,10 +66,20 @@ export default function AimTrainer() {
     setTimeLeft(20);
     setSavedMessage("");
     setRunning(true);
+    setGameOver(false);
   };
 
   const stop = async () => {
     setRunning(false);
+    setGameOver(true);
+    clearInterval(timerRef.current);
+    
+    // Check if game ended due to misses
+    if (misses >= 3) {
+      setSavedMessage(`Game Over! You missed 3 times. Final score: ${hits} hits`);
+      return;
+    }
+    
     const userId = localStorage.getItem("userId");
     if (!userId || !/^[0-9a-fA-F]{24}$/.test(userId)) {
       setSavedMessage("Not logged in — score not saved.");
@@ -82,7 +111,13 @@ export default function AimTrainer() {
       setHits((h) => h + 1);
       spawnTarget();
     } else {
-      setMisses((m) => m + 1);
+      setMisses((m) => {
+        const newMisses = m + 1;
+        if (newMisses >= 3) {
+          stop();
+        }
+        return newMisses;
+      });
     }
   };
 
@@ -90,8 +125,7 @@ export default function AimTrainer() {
     <div className="aim-container">
       <h1>🎯 Aim Trainer</h1>
       <p className="aim-description">
-        Click the target as quickly and accurately as you can before the timer
-        runs out.
+        Click the targets as quickly and accurately as you can. You have 20 seconds, but the game ends if you miss 3 times.
       </p>
 
       <div className="aim-stats">
@@ -132,6 +166,14 @@ export default function AimTrainer() {
       </div>
 
       {savedMessage && <p className="aim-feedback">{savedMessage}</p>}
+      {gameOver && (
+        <button 
+          onClick={() => navigate('/home')} 
+          className="aim-btn back-home"
+        >
+          Back to Home
+        </button>
+      )}
     </div>
   );
 }

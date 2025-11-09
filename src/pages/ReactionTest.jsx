@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "./ReactionTest.css";
 
 export default function ReactionTest() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState("waiting");
   const [message, setMessage] = useState("Click to start!");
   const [startTime, setStartTime] = useState(null);
@@ -77,6 +79,17 @@ export default function ReactionTest() {
           <p className="reaction-status">Last reaction: {reactionTime} ms</p>
         )}
         {!saved && <p className="reaction-status">Click anywhere to play again</p>}
+        {reactionTime && (
+          <button 
+            className="back-button" 
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate('/home');
+            }}
+          >
+            Back to Home
+          </button>
+        )}
       </div>
     </div>
   );

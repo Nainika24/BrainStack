@@ -86,3 +86,19 @@
 .number-btn:hover {
   transform: scale(1.05);
 }
+
+.number-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.back-btn {
+  background: linear-gradient(135deg, #475569, #334155);
+}
+
+.back-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #334155, #1e293b);
+}

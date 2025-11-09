@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "./VerbalMemory.css";
 
@@ -16,6 +17,7 @@ function shuffle(a) {
 }
 
 export default function VerbalMemory() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState("idle"); // idle | show | recall | result
   const [sequence, setSequence] = useState([]);
   const [displayIndex, setDisplayIndex] = useState(0);
@@ -185,6 +187,9 @@ export default function VerbalMemory() {
           <div className="verbal-actions">
             <button className="verbal-btn" onClick={handleRestart}>
               Play Again
+            </button>
+            <button className="verbal-btn secondary" onClick={() => navigate('/home')}>
+              Back to Home
             </button>
           </div>
         </div>

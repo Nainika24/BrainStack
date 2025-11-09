@@ -36,8 +36,11 @@ router.get("/user/:id", async (req, res) => {
 // ✅ Leaderboard (top 10 for each test type)
 router.get("/leaderboard/:testType", async (req, res) => {
   try {
+    // Determine sort order based on test type
+    const sortOrder = req.params.testType === "Reaction Time" ? 1 : -1; // 1 for ascending (lower is better), -1 for descending
+
     const scores = await Score.find({ testType: req.params.testType })
-      .sort({ score: -1 }) // assuming higher score = better performance
+      .sort({ score: sortOrder })
       .limit(10)
       .populate("userId", "name email");
 

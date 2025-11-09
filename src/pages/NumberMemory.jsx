@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./NumberMemory.css"; // ✅ Import the CSS file
 
 export default function NumberMemory() {
+  const navigate = useNavigate();
   const [number, setNumber] = useState("");
   const [input, setInput] = useState("");
   const [level, setLevel] = useState(1);
@@ -172,20 +174,28 @@ export default function NumberMemory() {
           <>
             <h2 className="result-message">{message}</h2>
 
-            <button
-              className={`number-btn ${
-                message.startsWith("✅") ? "" : "try-btn"
-              }`}
-              onClick={() => {
-                if (message.startsWith("✅")) {
-                  setLevel(level + 1);
-                } else {
-                  handleRestart();
-                }
-              }}
-            >
-              {message.startsWith("✅") ? "Next Level" : "Try Again"}
-            </button>
+            <div className="number-actions">
+              <button
+                className={`number-btn ${
+                  message.startsWith("✅") ? "" : "try-btn"
+                }`}
+                onClick={() => {
+                  if (message.startsWith("✅")) {
+                    setLevel(level + 1);
+                  } else {
+                    handleRestart();
+                  }
+                }}
+              >
+                {message.startsWith("✅") ? "Next Level" : "Try Again"}
+              </button>
+              <button
+                className="number-btn back-btn"
+                onClick={() => navigate('/home')}
+              >
+                Back to Home
+              </button>
+            </div>
           </>
         )}
       </div>

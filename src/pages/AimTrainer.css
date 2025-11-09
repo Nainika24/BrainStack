@@ -113,3 +113,10 @@
   border: 3px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 0 15px rgba(255, 82, 82, 0.6);
 }
+
+.aim-btn.back-home {
+  background: linear-gradient(135deg, #475569, #334155);
+  margin-top: 20px;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+}

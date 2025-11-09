@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "./home.css";
+import BestScores from "../components/BestScores";
 
 export default function Home() {
   const games = [
@@ -19,7 +20,7 @@ export default function Home() {
         <ul className="nav-links">
           <li><a href="#home">Home</a></li>
           <li><a href="#leaderboard">Leaderboard</a></li>
-          <li><a href="#results">Results</a></li>
+          <li><Link to="/results">Results</Link></li>
           <li><a href="#about">About</a></li>
         </ul>
       </nav>
@@ -71,21 +72,13 @@ export default function Home() {
 
       {/* Results Section */}
       <section id="results" className="results-section">
-        <h2 className="section-heading">📊 My Results</h2>
-        <p className="section-subtitle">Track your recent performances</p>
-        <div className="results-grid">
-          <div className="results-card">
-            <h4>Reaction Time</h4>
-            <p>Best: <span>240ms</span></p>
-          </div>
-          <div className="results-card">
-            <h4>Memory Test</h4>
-            <p>Level: <span>12</span></p>
-          </div>
-          <div className="results-card">
-            <h4>Typing</h4>
-            <p>Speed: <span>86 WPM</span></p>
-          </div>
+        <h2 className="section-heading">📊 My Best Scores</h2>
+        <p className="section-subtitle">Your personal records in each game</p>
+        <BestScores />
+        <div className="view-all-results">
+          <Link to="/results" className="view-all-button">
+            View All Results →
+          </Link>
         </div>
       </section>
 
