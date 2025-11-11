@@ -1,6 +1,8 @@
 import { useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
+
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -28,9 +30,10 @@ export default function Register() {
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+  <div className="register-container">
+    <div className="register-card">
+      <h2>Create Account</h2>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="name"
@@ -38,16 +41,14 @@ export default function Register() {
           value={form.name}
           onChange={handleChange}
           required
-          style={{ margin: "8px", padding: "8px", width: "250px" }}
         />
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Email Address"
           value={form.email}
           onChange={handleChange}
           required
-          style={{ margin: "8px", padding: "8px", width: "250px" }}
         />
         <input
           type="password"
@@ -56,16 +57,18 @@ export default function Register() {
           value={form.password}
           onChange={handleChange}
           required
-          style={{ margin: "8px", padding: "8px", width: "250px" }}
         />
-        <button type="submit" style={{ marginTop: "10px", padding: "10px 20px" }}>
-          Register
-        </button>
+
+        <button type="submit">Register</button>
       </form>
-      <p style={{ color: "green", marginTop: "10px" }}>{message}</p>
-      <p>
+
+      {message && <p className="message">{message}</p>}
+
+      <p className="redirect-text">
         Already have an account? <a href="/">Login</a>
       </p>
     </div>
-  );
+  </div>
+);
+
 }

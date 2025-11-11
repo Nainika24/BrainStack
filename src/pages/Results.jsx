@@ -8,7 +8,6 @@ const GAME_ICONS = {
   "Aim Trainer": "🎯",
   "Number Memory": "🔢",
   "Memory Test": "🎨",
-  "Typing Test": "⌨️",
   "Verbal Memory": "📝",
 };
 
@@ -61,8 +60,6 @@ export default function Results() {
         return `Level ${score}`;
       case "Memory Test":
         return `Level ${score}`;
-      case "Typing Test":
-        return `${score} WPM`;
       case "Verbal Memory":
         return `${score} words`;
       default:
@@ -85,11 +82,15 @@ export default function Results() {
     };
   };
 
-  const filteredScores = selectedGame === "All" 
-    ? scores 
+  // Exclude Typing Test (removed) from results listing and filters
+  const filteredScores = selectedGame === "All"
+    ? scores.filter(s => s.testType !== "Typing Test")
     : scores.filter(s => s.testType === selectedGame);
 
-  const uniqueGameTypes = ["All", ...new Set(scores.map(s => s.testType))];
+  const uniqueGameTypes = [
+    "All",
+    ...new Set(scores.filter(s => s.testType !== "Typing Test").map(s => s.testType))
+  ];
 
   return (
     <div className="results-container">

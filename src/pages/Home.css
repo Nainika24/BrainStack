@@ -154,43 +154,7 @@ html, body {
   box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
 }
 
-/* Leaderboard */
-.leaderboard-section {
-  text-align: center;
-  margin-top: 80px;
-}
-
-.section-heading {
-  font-size: 32px;
-  background: linear-gradient(135deg, #ff6bcb, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.section-subtitle {
-  color: #b0b8c6;
-  margin-top: 10px;
-  margin-bottom: 30px;
-}
-
-.leaderboard-grid {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  flex-wrap: wrap;
-}
-
-.leaderboard-card {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 15px;
-  padding: 20px 30px;
-  width: 250px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.leaderboard-card h3 {
-  color: #ffcc70;
-}
+/* Leaderboard removed */
 
 /* Results */
 .results-section {

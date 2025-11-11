@@ -7,7 +7,7 @@ export default function Home() {
     { name: "Reaction Time", icon: "⚡", desc: "Test your reflexes and reaction speed!", link: "/reaction" },
     { name: "Memory Test", icon: "🧩", desc: "Remember color and pattern sequences!", link: "/memory-test" },
     { name: "Number Memory", icon: "🔢", desc: "Memorize numbers that get longer each round!", link: "/number-memory" },
-    { name: "Typing Speed", icon: "⌨️", desc: "Type as fast and accurately as you can!", link: "/typing" },
+  // Typing Speed removed
     { name: "Aim Trainer", icon: "🎯", desc: "Improve your precision and hand-eye coordination!", link: "/aim" },
     { name: "Verbal Memory", icon: "💬", desc: "Remember words as they appear. Train your recall!", link: "/verbal-memory" },
   ];
@@ -19,7 +19,6 @@ export default function Home() {
         <div className="nav-logo">🧠 BrainStack</div>
         <ul className="nav-links">
           <li><a href="#home">Home</a></li>
-          <li><a href="#leaderboard">Leaderboard</a></li>
           <li><Link to="/results">Results</Link></li>
           <li><a href="#about">About</a></li>
         </ul>
@@ -50,25 +49,7 @@ export default function Home() {
         ))}
       </section>
 
-      {/* Leaderboard Section */}
-      <section id="leaderboard" className="leaderboard-section">
-        <h2 className="section-heading">🏆 Leaderboard</h2>
-        <p className="section-subtitle">Top scores across all BrainStack games</p>
-        <div className="leaderboard-grid">
-          <div className="leaderboard-card">
-            <h3>Player 1</h3>
-            <p>Reaction Time: <span>235ms</span></p>
-          </div>
-          <div className="leaderboard-card">
-            <h3>Player 2</h3>
-            <p>Typing Speed: <span>92 WPM</span></p>
-          </div>
-          <div className="leaderboard-card">
-            <h3>Player 3</h3>
-            <p>Aim Trainer: <span>87%</span></p>
-          </div>
-        </div>
-      </section>
+      {/* Leaderboard removed per user request */}
 
       {/* Results Section */}
       <section id="results" className="results-section">
@@ -101,9 +82,9 @@ export default function Home() {
             <p>Monitor your scores and see how you improve over time with analytics.</p>
           </div>
           <div className="about-card">
-            <div className="about-icon">🌍</div>
-            <h3>Compete Globally</h3>
-            <p>Compare scores with players worldwide on the global leaderboard.</p>
+            <div className="about-icon">🤝</div>
+            <h3>Share Progress</h3>
+            <p>Share your achievements and challenge friends to beat your scores.</p>
           </div>
         </div>
       </section>

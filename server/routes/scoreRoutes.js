@@ -33,18 +33,20 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// ✅ Leaderboard (top 10 for each test type)
+// ✅ Leaderboard (return the single top score for a given test type)
 router.get("/leaderboard/:testType", async (req, res) => {
   try {
     // Determine sort order based on test type
-    const sortOrder = req.params.testType === "Reaction Time" ? 1 : -1; // 1 for ascending (lower is better), -1 for descending
+    // For Reaction Time, lower is better (ascending). For other tests, higher is better (descending).
+    const sortOrder = req.params.testType === "Reaction Time" ? 1 : -1;
 
-    const scores = await Score.find({ testType: req.params.testType })
+    // Find the top score (single document) using findOne with sort, and populate the user's name/email
+    const topScore = await Score.findOne({ testType: req.params.testType })
       .sort({ score: sortOrder })
-      .limit(10)
       .populate("userId", "name email");
 
-    res.status(200).json(scores);
+    // Return the top score as an object (or null if none)
+    res.status(200).json(topScore);
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
     res.status(500).json({ error: error.message });

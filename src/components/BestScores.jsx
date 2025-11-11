@@ -7,7 +7,6 @@ const GAME_ICONS = {
   "Aim Trainer": "🎯",
   "Number Memory": "🔢",
   "Memory Test": "🎨",
-  "Typing Test": "⌨️",
   "Verbal Memory": "📝"
 };
 
@@ -21,8 +20,6 @@ const formatScore = (testType, score) => {
       return `Level ${score}`;
     case "Memory Test":
       return `Level ${score}`;
-    case "Typing Test":
-      return `${score} WPM`;
     case "Verbal Memory":
       return `${score} words`;
     default:

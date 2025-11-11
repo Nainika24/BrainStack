@@ -102,7 +102,7 @@ export default function VerbalMemory() {
         testType: "Verbal Memory",
         score: correct,
       });
-      setSavedMessage("Saved to leaderboard!");
+      setSavedMessage("Score saved!");
     } catch (err) {
       console.error("Failed to save verbal memory score:", err);
       setSavedMessage("Failed to save score.");
