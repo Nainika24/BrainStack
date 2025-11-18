@@ -34,6 +34,10 @@ export default function Login() {
 
   return (
     <div className="login-page">
+      <div className="logo-row">
+        <div className="brain-logo">🧠</div>
+        <h1 className="main-title"><span className="title-text">BrainStack</span></h1>
+      </div>
       <div className="login-card">
         <h1 className="login-title">Welcome Back</h1>
         <p className="login-subtitle">Sign in to continue to BrainStack.</p>

@@ -1,28 +1,32 @@
+/* Make Register page use the same palette and layout as Login */
 .register-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a2332 0%, #2d3e50 100%);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #eef2ff 0%, #c7d2fe 45%, #6366f1 100%);
+  padding: 32px 16px;
   font-family: "Poppins", sans-serif;
 }
 
 .register-card {
-  background: rgba(255, 255, 255, 0.08);
-  padding: 40px 50px;
-  border-radius: 16px;
-  width: 380px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
-  animation: fadeIn 0.6s ease-in-out;
+  width: min(420px, 95vw);
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 42px 36px;
+  box-shadow: 0 28px 60px rgba(79, 70, 229, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
 }
 
 .register-card h2 {
-  margin-bottom: 18px;
-  color: #60a5fa;
-  font-size: 1.9rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #3b3b7e;
+  text-align: center;
+  margin: 0;
 }
 
 .register-card form {
@@ -32,60 +36,67 @@
 }
 
 .register-card input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #475569;
-  background: rgba(255, 255, 255, 0.12);
-  color: #f8fafc;
-  font-size: 1rem;
-  outline: none;
-  transition: 0.3s;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.05);
+  font-size: 0.95rem;
+  color: #1f2937;
 }
 
 .register-card input:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 5px #60a5fa;
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+  background: #ffffff;
 }
 
 .register-card button {
-  padding: 12px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   border: none;
-  background: linear-gradient(135deg, #60a5fa, #a855f7);
+  border-radius: 14px;
   color: white;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.register-card button:hover {
-  transform: scale(1.05);
-}
-
-.message {
-  margin-top: 12px;
-  color: #10b981;
-  font-size: 1rem;
-}
-
-.redirect-text {
-  margin-top: 18px;
-  font-size: 0.95rem;
-  color: #cbd5f5;
-}
-
-.redirect-text a {
-  color: #60a5fa;
-  text-decoration: none;
   font-weight: 600;
+  font-size: 1rem;
+  padding: 12px;
+  cursor: pointer;
 }
 
-.redirect-text a:hover {
-  text-decoration: underline;
+.register-card button:hover { transform: translateY(-2px); }
+
+.message { margin-top: 8px; color: #16a34a; }
+
+.redirect-text { text-align: center; font-size: 0.95rem; color: #4c4f65; }
+
+.redirect-text a { color: #6366f1; font-weight: 600; text-decoration: none; }
+
+/* BrainStack hero elements (copied from Home.css) */
+.logo-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-/* Fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+.brain-logo {
+  font-size: 56px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.main-title { font-size: 36px; font-weight: 700; margin: 0; }
+
+.title-text {
+  background: linear-gradient(90deg, #ff6bcb, #a855f7, #60a5fa);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-8px);} }
+
+@media (max-width: 480px) {
+  .register-card { padding: 32px 24px; gap: 18px; }
+  .register-card h2 { font-size: 1.4rem; }
 }

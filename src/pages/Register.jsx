@@ -31,6 +31,10 @@ export default function Register() {
 
   return (
   <div className="register-container">
+    <div className="logo-row">
+      <div className="brain-logo">🧠</div>
+      <h1 className="main-title"><span className="title-text">BrainStack</span></h1>
+    </div>
     <div className="register-card">
       <h2>Create Account</h2>
       <form onSubmit={handleSubmit}>
