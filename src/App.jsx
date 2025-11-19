@@ -7,7 +7,6 @@ import ReactionTest from "./pages/ReactionTest";
 import Results from "./pages/Results";
 import NumberMemory from "./pages/NumberMemory";
 import MemoryTest from "./pages/MemoryTest";
-// Leaderboard and TypingTest removed per user request
 import AimTrainer from "./pages/AimTrainer";
 import VerbalMemory from "./pages/VerbalMemory";
 
@@ -26,7 +25,6 @@ function App() {
             <Route path="/aim" element={<AimTrainer />} />
             <Route path="/verbal-memory" element={<VerbalMemory />} />
             <Route path="/results" element={<Results />} />
-            {/* Typing and Leaderboard routes removed */}
           </Routes>
         </div>
       </div>

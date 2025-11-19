@@ -20,8 +20,8 @@ const scoreSchema = new mongoose.Schema({
   },
 });
 
-// ✅ This line is CRUCIAL
+
 const Score = mongoose.model("Score", scoreSchema);
 
-// ✅ Must be a default export
+
 export default Score;

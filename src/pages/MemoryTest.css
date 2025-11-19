@@ -42,9 +42,12 @@
   width: 80px;
   height: 80px;
   border-radius: 12px;
-  background-color: rgba(30, 41, 59, 0.7);
-  transition: all 0.25s ease;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+  /* light tile color for better visibility */
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.18s ease;
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  color: #0f172a;
 }
 
 .grid-tile:hover {

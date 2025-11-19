@@ -3,7 +3,7 @@ import Score from "../models/Score.js";
 
 const router = express.Router();
 
-// ✅ Add a new score
+//  Add a new score
 router.post("/add", async (req, res) => {
   try {
     const { userId, testType, score } = req.body; // renamed to 'score' for consistency
@@ -12,7 +12,7 @@ router.post("/add", async (req, res) => {
       return res.status(400).json({ error: "All fields (userId, testType, score) are required" });
     }
 
-    // ✅ Use async/await without callback
+    //  Use async/await without callback
     const newScore = await Score.create({ userId, testType, score });
 
     res.status(201).json({ message: "Score saved successfully", data: newScore });
@@ -22,7 +22,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// ✅ Get scores for a specific user
+//  Get scores for a specific user
 router.get("/user/:id", async (req, res) => {
   try {
     const scores = await Score.find({ userId: req.params.id }).sort({ date: -1 });
@@ -33,7 +33,7 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// ✅ Leaderboard (return the single top score for a given test type)
+//  Leaderboard (return the single top score for a given test type)
 router.get("/leaderboard/:testType", async (req, res) => {
   try {
     // Determine sort order based on test type
